@@ -1,0 +1,47 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# -------------------------- 新增这1行：指定后端解决兼容性问题 --------------------------
+plt.switch_backend('TkAgg')
+
+pp=[['T',0.9],['F',0.4],['F',0.2],['T',0.6],
+    ['F',0.5],['F',0.5],['T',0.7],['T',0.4]]
+aa=[0.9,0.8,0.7,0.6,0.5,0.55,0.54,0.53,0.52,0.51,0.505,0.4,0.39,0.38,0.37,0.36,0.35,0.34,0.33,0.32,0.3,0.1]
+recall =[]
+precision =[]
+TPR =[]
+FPR =[]
+for a in aa:
+    tp = 0
+    fn = 0
+    fp = 0
+    tn = 0
+    x = 0
+    y = 0
+
+    for p in pp:
+        if( p[0] == 'T') and (p[1]>=a):
+            tp = tp + 1
+        elif( p[0] == 'T') and (p[1]<a):
+            fn = fn + 1
+        elif( p[0] == 'F') and (p[1]>=a):
+            fp = fp +1
+        elif( p[0] == 'F') and (p[1]<a):
+            tn =tn + 1
+    x = float(tp)/float(tp+fn)
+    y = float(tp)/float(tp+fp) if (tp+fp) > 0 else 0.0
+    fpr =float(fp)/float(fp+tn) if (fp+tn) > 0 else 0.0
+
+    recall .append(x)
+    precision .append(y)
+    TPR.append(x)
+    FPR.append(fpr)
+
+plt.close('all')
+plt.figure(figsize =(5,5))
+plt.title('Recall-Precision curve',fontsize=16)
+plt.plot(recall,precision)
+plt.plot(recall,precision, 'ro')
+plt.xlabel('Recall', fontsize=16)
+plt.ylabel('Precision', fontsize=16)
+plt.show()
