@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.metrics import auc  # 用来算AUC
 
 plt.switch_backend('TkAgg')
 
@@ -10,6 +11,7 @@ recall =[]
 precision =[]
 TPR =[]
 FPR =[]
+
 for a in aa:
     tp = 0
     fn = 0
@@ -27,20 +29,26 @@ for a in aa:
             fp = fp +1
         elif( p[0] == 'F') and (p[1]<a):
             tn =tn + 1
+
     x = float(tp)/float(tp+fn)
     y = float(tp)/float(tp+fp) if (tp+fp) > 0 else 0.0
     fpr =float(fp)/float(fp+tn) if (fp+tn) > 0 else 0.0
 
-    recall .append(x)
-    precision .append(y)
+    recall.append(x)
+    precision.append(y)
     TPR.append(x)
     FPR.append(fpr)
 
+
+auc_score = auc(FPR, TPR)
+print(f"AUC = {auc_score:.4f}")  # 控制台输出
+
+
 plt.close('all')
-plt.figure(figsize =(5,5))
-plt.title('ROC curve',fontsize=16)
-plt.plot(FPR,TPR)
-plt.plot(FPR,TPR, 'ro')
+plt.figure(figsize=(5,5))
+plt.title(f'ROC curve (AUC = {auc_score:.4f})', fontsize=16)
+plt.plot(FPR, TPR)
+plt.plot(FPR, TPR, 'ro')
 plt.xlabel('FPR', fontsize=16)
 plt.ylabel('TPR', fontsize=16)
 plt.show()
